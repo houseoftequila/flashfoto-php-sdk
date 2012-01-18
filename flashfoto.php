@@ -23,11 +23,12 @@ class FlashFoto extends Object {
 	}
 
 	/**
-	 * @param string $url
-	 * @param string $method
-	 * @param array $post_data
-	 * @param bool $decode
-	 * @return string|object
+	 * Makes a request to the FlashFoto API
+	 * @param string $url Request URL
+	 * @param string $method HTTP request method
+	 * @param array $post_data Array of POST data
+	 * @param bool $decode False to turn off json decoding
+	 * @return string|array JSON decoded array or string if $decode is false
 	 * @throws Exception
 	 */
 	protected function __make_request($url, $method = 'GET', $post_data = null, $decode = true) {
@@ -91,7 +92,7 @@ class FlashFoto extends Object {
 	 * Adds an image
 	 * @param string $image_data String of raw image data
 	 * @param array $params version<br/>privacy<br/>group<br/>format<br/>location<br/>
-	 * @return object JSON response object
+	 * @return array JSON response array
 	 */
 	function add($image_data=null, $params=null) {
 		$url = $this->getUrlWithParamString("add", $params);
@@ -103,7 +104,7 @@ class FlashFoto extends Object {
 	 * Creates a copy of an image
 	 * @param int $image_id
 	 * @param array $params version<br/>x<br/>y<br/>width<br/>height<br/>dest_id<br/>dest_version<br/>dest_group<br/>dest_privacy
-	 * @return object JSON response object
+	 * @return array JSON response array
 	 */
 	function copy($image_id, $params=null) {
 		$url = $this->getUrlWithParamString("copy/".$image_id, $params);
@@ -125,7 +126,7 @@ class FlashFoto extends Object {
 	 * Removes an image
 	 * @param int $image_id
 	 * @param array $params version
-	 * @return object JSON response object
+	 * @return array JSON response array
 	 */
 	function delete($image_id, $params=null) {
 		$url = $this->getUrlWithParamString("delete/".$image_id, $params);
@@ -135,7 +136,7 @@ class FlashFoto extends Object {
 	/**
 	 * Finds Images that belong to you given the filtering parameters you provide.
 	 * @param array $params group
-	 * @return object JSON response object
+	 * @return array JSON response array
 	 */
 	function find($params=null) {
 		$url = $this->getUrlWithParamString("find", $params);
@@ -146,7 +147,7 @@ class FlashFoto extends Object {
 	 * Retrieves the information that we are storing about a particular image.
 	 * @param int $image_id
 	 * @param array $params image_id
-	 * @return object JSON response object
+	 * @return array JSON response array
 	 */
 	function info($image_id, $params=null) {
 		$url = $this->getUrlWithParamString("info/".$image_id, $params);
@@ -157,7 +158,7 @@ class FlashFoto extends Object {
 	 * This method processes the specified image, and retrieves the facial location data about an image.<br/>
 	 * If you want to retrieve the location data of an image you have already processed, you can call findfaces_status
 	 * @param int $image_id
-	 * @return object JSON response object
+	 * @return array JSON response array
 	 */
 	function findfaces($image_id) {
 		return $this->__make_request('findfaces/' . $image_id);
@@ -167,7 +168,7 @@ class FlashFoto extends Object {
 	 * This method retrieves the facial location data about an image that you have already processed.<br/>
 	 * If you want to retrieve the location data of an image you have not already processed, you can call findfaces
 	 * @param int $image_id
-	 * @return object JSON response object
+	 * @return array JSON response array
 	 */
 	function findfaces_status($image_id) {
 		return $this->__make_request('findfaces_status/' . $image_id);
@@ -177,7 +178,7 @@ class FlashFoto extends Object {
 	 * This method processes the specified image, and detects the face and hair lines of the primary face in the image.
 	 * @param int $image_id
 	 * @param array $params
-	 * @return object JSON response object
+	 * @return array JSON response array
 	 */
 	function segment($image_id, $params=null) {
 		$url = $this->getUrlWithParamString("segment/".$image_id, $params);
@@ -188,7 +189,7 @@ class FlashFoto extends Object {
 	 * This method returns the results of the segment method. If the Segmentation has failed, or is pending/processing, the response will represent that.
 	 * @param int $image_id
 	 * @param array $params
-	 * @return object JSON response object
+	 * @return array JSON response array
 	 */
 	function segment_status($image_id, $params=null) {
 		$url = $this->getUrlWithParamString("segment_status/".$image_id, $params);
@@ -199,7 +200,7 @@ class FlashFoto extends Object {
 	 * This method processes the specified image, and detects the face, hair and body area of the primary person in the image.
 	 * @param int $image_id
 	 * @param array $params
-	 * @return object JSON response object
+	 * @return array JSON response array
 	 */
 	function mugshot($image_id, $params=null) {
 		$url = $this->getUrlWithParamString("mugshot/".$image_id, $params);
@@ -210,7 +211,7 @@ class FlashFoto extends Object {
 	 * This method returns the results of the mugshot method. If the Mugshot has failed, or is pending/processing, the response will represent that.
 	 * @param int $image_id
 	 * @param array $params
-	 * @return object JSON response object
+	 * @return array JSON response array
 	 */
 	function mugshot_status($image_id, $params=null) {
 		$url = $this->getUrlWithParamString("mugshot_status/".$image_id, $params);
@@ -221,7 +222,7 @@ class FlashFoto extends Object {
 	 * This method removes the background of an image.
 	 * @param int $image_id
 	 * @param array $params findholes<br/>hole_similarity_threshold<br/>adapt_hist_eq_clip_limit
-	 * @return object JSON response object
+	 * @return array JSON response array
 	 */
 	function remove_uniform_background($image_id, $params=null) {
 		$url = $this->getUrlWithParamString("remove_uniform_background/".$image_id, $params);
@@ -232,7 +233,7 @@ class FlashFoto extends Object {
 	 * This method allows for the crop of an image given a specified aspect ratio.
 	 * @param int $image_id
 	 * @param array $params ratioHeight<br/>ratioWidth
-	 * @return object JSON response object
+	 * @return array JSON response array
 	 */
 	function crop($image_id, $params=null) {
 		$url = $this->getUrlWithParamString("crop/".$image_id, $params);
@@ -243,7 +244,7 @@ class FlashFoto extends Object {
 	 * This method allows for the merging of multiple images together at specified coordinates.
 	 * @param array $merge_data image_id<br/>version<br/>x<br/>y<br/>scale<br/>angle<br/>flip
 	 * @param array $params privacy<br/>group
-	 * @return object JSON response object
+	 * @return array JSON response array
 	 */
 	function merge($merge_data, $params=null) {
 		$url = $this->getUrlWithParamString("merge");
