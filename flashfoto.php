@@ -10,6 +10,12 @@ class FlashFoto extends Object {
 	protected $partner_apikey = null;
 	protected $base_url = null;
 
+	/**
+	 * Create a new FlashFoto object with API credentials and base API endpoint
+	 * @param string $partner_username Partner username from API credentials
+	 * @param string $partner_apikey Partner API key from API credentials
+	 * @param string $base_url Base API endpoint URL
+	 */
 	public function __construct($partner_username, $partner_apikey, $base_url='http://flashfotoapi.com/api/') {
 		$this->partner_username = $partner_username;
 		$this->partner_apikey = $partner_apikey;
@@ -151,24 +157,20 @@ class FlashFoto extends Object {
 	 * This method processes the specified image, and retrieves the facial location data about an image.<br/>
 	 * If you want to retrieve the location data of an image you have already processed, you can call findfaces_status
 	 * @param int $image_id
-	 * @param array $params
 	 * @return object JSON response object
 	 */
-	function findfaces($image_id, $params=null) {
-		$url = $this->getUrlWithParamString("findfaces/".$image_id, $params);
-		return $this->__make_request($url);
+	function findfaces($image_id) {
+		return $this->__make_request('findfaces/' . $image_id);
 	}
 
 	/**
 	 * This method retrieves the facial location data about an image that you have already processed.<br/>
 	 * If you want to retrieve the location data of an image you have not already processed, you can call findfaces
 	 * @param int $image_id
-	 * @param array $params
 	 * @return object JSON response object
 	 */
-	function findfaces_status($image_id, $params=null) {
-		$url = $this->getUrlWithParamString("findfaces_status/".$image_id, $params);
-		return $this->__make_request($url);
+	function findfaces_status($image_id) {
+		return $this->__make_request('findfaces_status/' . $image_id);
 	}
 
 	/**
