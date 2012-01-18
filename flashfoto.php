@@ -1,6 +1,7 @@
 <?php
 /**
- * FlashFoto PHP API
+ * FlashFoto PHP API SDK
+ * For FlashFoto APIv2
  */
 
 class FlashFoto extends Object {
@@ -15,6 +16,14 @@ class FlashFoto extends Object {
 		$this->base_url = $base_url;
 	}
 
+	/**
+	 * @param string $url
+	 * @param string $method
+	 * @param array $post_data
+	 * @param bool $decode
+	 * @return string|object
+	 * @throws Exception
+	 */
 	protected function __make_request($url, $method = 'GET', $post_data = null, $decode = true) {
 		$url = $this->base_url . $url;
 		if(strstr($url, '?')){
@@ -58,90 +67,184 @@ class FlashFoto extends Object {
 			return $result;
 		}
 	}
+
+	/**
+	 * Adds params to query string of url
+	 * @param string $url
+	 * @param array $params
+	 * @return string
+	 */
 	protected function getUrlWithParamString($url, $params=null){
-		if(!$params)
-			return "";
-		$param_list = array();
-		foreach($params as $k=>$v){
-			$param_list = $k.=urlencode($v);
+		if($params === null) {
+			return $url;
 		}
-		$param_string = join("&", $param_list);
-		if($param_string){
-			$url .= "?".$param_string;
-		}
-		return $url;
+		return $url . '?' . http_build_query($params);
 	}
 
-	/*
-	 * APIv2 Compliant
+	/**
+	 * Adds an image
+	 * @param string $image_data String of raw image data
+	 * @param array $params version<br/>privacy<br/>group<br/>format<br/>location<br/>
+	 * @return object JSON response object
 	 */
 	function add($image_data=null, $params=null) {
-		$url = $this->getParamString("add", $params);
+		$url = $this->getUrlWithParamString("add", $params);
 		$result = $this->__make_request($url, "POST", $image_data);
 		return $result;
 	}
 
+	/**
+	 * Creates a copy of an image
+	 * @param int $image_id
+	 * @param array $params version<br/>x<br/>y<br/>width<br/>height<br/>dest_id<br/>dest_version<br/>dest_group<br/>dest_privacy
+	 * @return object JSON response object
+	 */
 	function copy($image_id, $params=null) {
-		$url = $this->getParamString("copy/".$image_id, $params);
+		$url = $this->getUrlWithParamString("copy/".$image_id, $params);
 		return $this->__make_request($url);
 	}
 
+	/**
+	 * Retrieves an image
+	 * @param int $image_id
+	 * @param array $params image_id<br/>width<br/>height<br/>resize
+	 * @return string Binary image data
+	 */
 	function get($image_id, $params=null) {
-		$url = $this->getParamString("get/".$image_id, $params);
+		$url = $this->getUrlWithParamString("get/".$image_id, $params);
 		return $this->__make_request($url);
 	}
+
+	/**
+	 * Removes an image
+	 * @param int $image_id
+	 * @param array $params version
+	 * @return object JSON response object
+	 */
 	function delete($image_id, $params=null) {
-		$url = $this->getParamString("delete/".$image_id, $params);
+		$url = $this->getUrlWithParamString("delete/".$image_id, $params);
 		return $this->__make_request($url);
 	}
 
+	/**
+	 * Finds Images that belong to you given the filtering parameters you provide.
+	 * @param array $params group
+	 * @return object JSON response object
+	 */
 	function find($params=null) {
-		$url = $this->getParamString("find", $params);
+		$url = $this->getUrlWithParamString("find", $params);
 		return $this->__make_request($url);
 	}
 
+	/**
+	 * Retrieves the information that we are storing about a particular image.
+	 * @param int $image_id
+	 * @param array $params image_id
+	 * @return object JSON response object
+	 */
 	function info($image_id, $params=null) {
-		$url = $this->getParamString("info/".$image_id, $params);
+		$url = $this->getUrlWithParamString("info/".$image_id, $params);
 		return $this->__make_request($url);
 	}
 
+	/**
+	 * This method processes the specified image, and retrieves the facial location data about an image.<br/>
+	 * If you want to retrieve the location data of an image you have already processed, you can call findfaces_status
+	 * @param int $image_id
+	 * @param array $params
+	 * @return object JSON response object
+	 */
 	function findfaces($image_id, $params=null) {
-		$url = $this->getParamString("findfaces/".$image_id, $params);
+		$url = $this->getUrlWithParamString("findfaces/".$image_id, $params);
 		return $this->__make_request($url);
 	}
 
+	/**
+	 * This method retrieves the facial location data about an image that you have already processed.<br/>
+	 * If you want to retrieve the location data of an image you have not already processed, you can call findfaces
+	 * @param int $image_id
+	 * @param array $params
+	 * @return object JSON response object
+	 */
 	function findfaces_status($image_id, $params=null) {
-		$url = $this->getParamString("findfaces_status/".$image_id, $params);
+		$url = $this->getUrlWithParamString("findfaces_status/".$image_id, $params);
 		return $this->__make_request($url);
 	}
 
+	/**
+	 * This method processes the specified image, and detects the face and hair lines of the primary face in the image.
+	 * @param int $image_id
+	 * @param array $params
+	 * @return object JSON response object
+	 */
 	function segment($image_id, $params=null) {
-		$url = $this->getParamString("segment/".$image_id, $params);
+		$url = $this->getUrlWithParamString("segment/".$image_id, $params);
 		return $this->__make_request($url);
 	}
 
+	/**
+	 * This method returns the results of the segment method. If the Segmentation has failed, or is pending/processing, the response will represent that.
+	 * @param int $image_id
+	 * @param array $params
+	 * @return object JSON response object
+	 */
 	function segment_status($image_id, $params=null) {
-		$url = $this->getParamString("segment_status/".$image_id, $params);
+		$url = $this->getUrlWithParamString("segment_status/".$image_id, $params);
 		return $this->__make_request($url);
 	}
+
+	/**
+	 * This method processes the specified image, and detects the face, hair and body area of the primary person in the image.
+	 * @param int $image_id
+	 * @param array $params
+	 * @return object JSON response object
+	 */
 	function mugshot($image_id, $params=null) {
-		$url = $this->getParamString("mugshot/".$image_id, $params);
+		$url = $this->getUrlWithParamString("mugshot/".$image_id, $params);
 		return $this->__make_request($url);
 	}
+
+	/**
+	 * This method returns the results of the mugshot method. If the Mugshot has failed, or is pending/processing, the response will represent that.
+	 * @param int $image_id
+	 * @param array $params
+	 * @return object JSON response object
+	 */
 	function mugshot_status($image_id, $params=null) {
-		$url = $this->getParamString("mugshot_status/".$image_id, $params);
+		$url = $this->getUrlWithParamString("mugshot_status/".$image_id, $params);
 		return $this->__make_request($url);
 	}
+
+	/**
+	 * This method removes the background of an image.
+	 * @param int $image_id
+	 * @param array $params findholes<br/>hole_similarity_threshold<br/>adapt_hist_eq_clip_limit
+	 * @return object JSON response object
+	 */
 	function remove_uniform_background($image_id, $params=null) {
-		$url = $this->getParamString("remove_uniform_background/".$image_id, $params);
+		$url = $this->getUrlWithParamString("remove_uniform_background/".$image_id, $params);
 		return $this->__make_request($url);
 	}
+
+	/**
+	 * This method allows for the crop of an image given a specified aspect ratio.
+	 * @param int $image_id
+	 * @param array $params ratioHeight<br/>ratioWidth
+	 * @return object JSON response object
+	 */
 	function crop($image_id, $params=null) {
-		$url = $this->getParamString("crop/".$image_id, $params);
+		$url = $this->getUrlWithParamString("crop/".$image_id, $params);
 		return $this->__make_request($url);
 	}
+
+	/**
+	 * This method allows for the merging of multiple images together at specified coordinates.
+	 * @param array $merge_data image_id<br/>version<br/>x<br/>y<br/>scale<br/>angle<br/>flip
+	 * @param array $params privacy<br/>group
+	 * @return object JSON response object
+	 */
 	function merge($merge_data, $params=null) {
-		$url = $this->getParamString("merge");
+		$url = $this->getUrlWithParamString("merge");
 		return $this->__make_request($url, $method='POST', json_encode($merge_data));
 	}
 
