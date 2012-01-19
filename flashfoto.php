@@ -82,7 +82,7 @@ class FlashFoto extends Object {
 
 		if($decode) {
 			$decoded = json_decode($result, true);
-			if($decode === null) {
+			if($decoded === null) {
 				throw new Exception('Unable to decode API response');
 			} else {
 				return $decoded;
