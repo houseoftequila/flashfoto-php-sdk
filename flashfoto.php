@@ -177,23 +177,19 @@ class FlashFoto extends Object {
 	/**
 	 * This method processes the specified image, and detects the face and hair lines of the primary face in the image.
 	 * @param int $image_id
-	 * @param array $params
 	 * @return array JSON response array
 	 */
-	function segment($image_id, $params=null) {
-		$url = $this->getUrlWithParamString("segment/".$image_id, $params);
-		return $this->__make_request($url);
+	function segment($image_id) {
+		return $this->__make_request('segment/' . $image_id);
 	}
 
 	/**
 	 * This method returns the results of the segment method. If the Segmentation has failed, or is pending/processing, the response will represent that.
 	 * @param int $image_id
-	 * @param array $params
 	 * @return array JSON response array
 	 */
-	function segment_status($image_id, $params=null) {
-		$url = $this->getUrlWithParamString("segment_status/".$image_id, $params);
-		return $this->__make_request($url);
+	function segment_status($image_id) {
+		return $this->__make_request('segment_status/' . $image_id);
 	}
 
 	/**
