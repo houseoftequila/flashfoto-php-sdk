@@ -10,6 +10,12 @@ class FlashFoto extends Object {
 	protected $partner_apikey = null;
 	protected $base_url = null;
 
+	/* @var string $last_response */
+	protected $last_response = null;
+
+	/* @var array $last_response_info */
+	protected $last_response_info = null;
+
 	/**
 	 * Create a new FlashFoto object with API credentials and base API endpoint
 	 * @param string $partner_username Partner username from API credentials
@@ -32,6 +38,9 @@ class FlashFoto extends Object {
 	 * @throws Exception
 	 */
 	protected function __make_request($url, $method = 'GET', $post_data = null, $decode = true) {
+		//Reset last response data
+		$this->last_response = $this->last_response_info = null;
+
 		$url = $this->base_url . $url;
 		if(strstr($url, '?')){
 			$url .= "&";
@@ -57,19 +66,27 @@ class FlashFoto extends Object {
 		}
 
 
-		$result = curl_exec($ch);
-		$info = curl_getinfo($ch);
+		$this->last_response = $result = curl_exec($ch);
+		$this->last_response_info = $info = curl_getinfo($ch);
 		$http_status = isset($info['http_code']) ? $info['http_code'] : null;
 		curl_close($ch);
 		// Check to see if the result if bad
 		if($http_status != 200){
 			$result = json_decode($result, true);
-			throw new Exception($result['message'], $result['code']);
+			if($result && isset($result['message']) && isset($result['code'])) {
+				throw new Exception($result['message'], $result['code']);
+			} else {
+				throw new Exception('Unable to decode API response');
+			}
 		}
 
 		if($decode) {
 			$decoded = json_decode($result, true);
-			return $decoded;
+			if($decode === null) {
+				throw new Exception('Unable to decode API response');
+			} else {
+				return $decoded;
+			}
 		} else {
 			return $result;
 		}
@@ -247,5 +264,20 @@ class FlashFoto extends Object {
 		return $this->__make_request($url, $method='POST', json_encode($merge_data));
 	}
 
+	/**
+	 * Returns the raw last response from the FlashFoto API
+	 * @return null|string
+	 */
+	public function getLastResponse() {
+		return $this->last_response;
+	}
+
+	/**
+	 * Returns the curl_getinfo data for the last response from the FlashFoto API
+	 * @return array|null
+	 */
+	public function getLastResponseInfo() {
+		return $this->last_response_info;
+	}
 
 }
