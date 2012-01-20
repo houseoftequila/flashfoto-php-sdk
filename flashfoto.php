@@ -275,7 +275,7 @@ class FlashFoto extends Object {
 	 * @return array JSON response array
 	 */
 	function merge($merge_data, $params=null) {
-		$url = $this->getUrlWithParamString("merge");
+		$url = $this->getUrlWithParamString('merge', $params);
 		return $this->__make_request($url, $method='POST', json_encode($merge_data));
 	}
 
