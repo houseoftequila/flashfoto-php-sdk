@@ -118,7 +118,7 @@ class FlashFoto extends Object {
 
 	/**
 	 * Adds an image
-	 * @param string $image_data String of raw image data
+	 * @param string $image_data String of raw image data, null if using the location param
 	 * @param array $params version<br/>privacy<br/>group<br/>format<br/>location<br/>
 	 * @return array JSON response array
 	 */
