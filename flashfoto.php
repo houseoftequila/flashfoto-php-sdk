@@ -80,7 +80,7 @@ class FlashFoto extends Object {
 				$message = $result['message'];
 				$code = $result['code'];
 			} else {
-				$message = 'Unable to decode API response';
+				throw new FlashFotoResponseDecodingException('Unable to decode API response', 0, null, $http_status);
 			}
 			//Throw proper exception type
 			switch($http_status) {
@@ -94,7 +94,7 @@ class FlashFoto extends Object {
 		if($decode) {
 			$decoded = json_decode($result, true);
 			if($decoded === null) {
-				throw new FlashFotoException('Unable to decode API response', 0, null, $http_status);
+				throw new FlashFotoResponseDecodingException('Unable to decode API response', 0, null, $http_status);
 			} else {
 				return $decoded;
 			}
@@ -307,5 +307,7 @@ class FlashFotoException extends Exception {
 		return $this->http_status;
 	}
 }
+//If JSON decoding fails
+class FlashFotoResponseDecodingException extends FlashFotoException {}
 //404
 class FlashFotoNotFoundException extends FlashFotoException {}
