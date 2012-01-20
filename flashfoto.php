@@ -124,7 +124,11 @@ class FlashFoto extends Object {
 	 */
 	function add($image_data=null, $params=null) {
 		$url = $this->getUrlWithParamString("add", $params);
-		$result = $this->__make_request($url, "POST", $image_data);
+		if($image_data){
+			$result = $this->__make_request($url, "POST", $image_data);
+		} else {
+			$result = $this->__make_request($url);
+		}
 		return $result;
 	}
 
