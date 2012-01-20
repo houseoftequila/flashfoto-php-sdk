@@ -142,12 +142,12 @@ class FlashFoto extends Object {
 	/**
 	 * Retrieves an image
 	 * @param int $image_id
-	 * @param array $params image_id<br/>width<br/>height<br/>resize
+	 * @param array $params width<br/>height<br/>resize<br/>version
 	 * @return string Binary image data
 	 */
 	function get($image_id, $params=null) {
-		$url = $this->getUrlWithParamString("get/".$image_id, $params);
-		return $this->__make_request($url);
+		$url = $this->getUrlWithParamString('get/' . $image_id, $params);
+		return $this->__make_request($url, 'GET', null, false);
 	}
 
 	/**
