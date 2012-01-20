@@ -35,7 +35,7 @@ class FlashFoto extends Object {
 	 * @param array $post_data Array of POST data
 	 * @param bool $decode False to turn off json decoding
 	 * @return string|array JSON decoded array or string if $decode is false
-	 * @throws Exception
+	 * @throws FlashFotoException
 	 */
 	protected function __make_request($url, $method = 'GET', $post_data = null, $decode = true) {
 		//Reset last response data
@@ -65,25 +65,36 @@ class FlashFoto extends Object {
 			curl_setopt($ch, CURLOPT_POST, true);
 		}
 
-
 		$this->last_response = $result = curl_exec($ch);
 		$this->last_response_info = $info = curl_getinfo($ch);
 		$http_status = isset($info['http_code']) ? $info['http_code'] : null;
 		curl_close($ch);
-		// Check to see if the result if bad
-		if($http_status != 200){
+
+		//Throw exception if result is bad
+		if($http_status != 200) {
+			$message = '';
+			$code = 0;
+			//Get message and code from API response
 			$result = json_decode($result, true);
 			if($result && isset($result['message']) && isset($result['code'])) {
-				throw new Exception($result['message'], $result['code']);
+				$message = $result['message'];
+				$code = $result['code'];
 			} else {
-				throw new Exception('Unable to decode API response');
+				$message = 'Unable to decode API response';
+			}
+			//Throw proper exception type
+			switch($http_status) {
+				case 404:
+					throw new FlashFotoNotFoundException($message, $code, null, $http_status);
+				default:
+					throw new FlashFotoException($message, $code, null, $http_status);
 			}
 		}
 
 		if($decode) {
 			$decoded = json_decode($result, true);
 			if($decoded === null) {
-				throw new Exception('Unable to decode API response');
+				throw new FlashFotoException('Unable to decode API response', 0, null, $http_status);
 			} else {
 				return $decoded;
 			}
@@ -281,3 +292,20 @@ class FlashFoto extends Object {
 	}
 
 }
+
+//Base FlashFoto exception
+class FlashFotoException extends Exception {
+	/* @var int $http_status */
+	protected $http_status;
+
+	public function __construct($message='', $code=0, $previous=null, $http_status=null) {
+		parent::__construct($message, $code, $previous);
+		$this->http_status = $http_status;
+	}
+
+	public function getHttpStatus() {
+		return $this->http_status;
+	}
+}
+//404
+class FlashFotoNotFoundException extends FlashFotoException {}
