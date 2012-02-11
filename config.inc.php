@@ -12,5 +12,5 @@ $cfg['partner_username'] = '';
 $cfg['partner_apikey'] = '';
 
 
-/* Only change this if you are running your own instance of the API */
-$cfg['base_url'] = '';
+/* Only change this if you are running your own instance of the API (include /api/) */
+$cfg['base_url'] = 'http://flashfotoapi.com/api/'; //Default: http://flashfotoapi.com/api/
