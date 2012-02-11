@@ -4,7 +4,7 @@
  * For FlashFoto APIv2
  */
 
-class FlashFoto extends Object {
+class FlashFoto {
 
 	protected $partner_username = null;
 	protected $partner_apikey = null;
