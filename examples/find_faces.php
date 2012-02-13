@@ -9,6 +9,8 @@ include_once('../example.inc.php');
 include_once('../flashfoto.php');
 
 $method = 'find faces';
+$api_url = 'findfaces';
+$doc_url = 'findfaces';
 
 if(empty($cfg['partner_username']) || empty($cfg['partner_apikey']) || empty($cfg['base_url'])) {
 	$error = 'Please configure your settings in config.inc.php';
@@ -56,7 +58,7 @@ if(!empty($_POST)  && empty($error)) {
 		<noscript class="error">Please enable Javascript!</noscript>
 
 		<h2>
-			<a href="<?php echo $cfg['base_url'].'../docs/'.$method; ?>" target="_blank" title="Link to <?php echo ucwords($method); ?> documentation"><?php echo ucwords($method); ?></a>
+			<a href="<?php echo $cfg['base_url'].'../docs/'.$doc_url; ?>" target="_blank" title="Link to <?php echo ucwords($method); ?> documentation"><?php echo ucwords($method); ?></a>
 			Example - FlashFoto PHP API SDK
 		</h2>
 		
@@ -71,7 +73,7 @@ if(!empty($_POST)  && empty($error)) {
 		<?php endif; ?>
 
 		<h3>URL</h3>
-		<?php echo $cfg['base_url'] . str_replace(' ', '', $method) . '/'; ?>
+		<?php echo $cfg['base_url'] . $api_url . '/'; ?>
 
 		<form name="form" enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 
