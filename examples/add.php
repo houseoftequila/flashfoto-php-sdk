@@ -55,7 +55,7 @@ if(!empty($_POST)  && empty($error)) {
 		<noscript class="error">Please enable Javascript!</noscript>
 
 		<h2>
-			<a href="<?php echo $cfg['base_url'].'../docs/'.$method; ?>" target="_blank" title="Link to <?php echo ucwords($method); ?> documentation">Add</a>
+			<a href="<?php echo $cfg['base_url'].'../docs/'.$method; ?>" target="_blank" title="Link to <?php echo ucwords($method); ?> documentation"><?php echo ucwords($method); ?></a>
 			Example - FlashFoto PHP API SDK
 		</h2>
 		
