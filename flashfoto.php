@@ -265,7 +265,7 @@ class FlashFoto {
 	 */
 	function crop($image_id, $params=null) {
 		$url = $this->getUrlWithParamString("crop/".$image_id, $params);
-		return $this->__make_request($url);
+		return $this->__make_request($url, 'GET', null, false);
 	}
 
 	/**
