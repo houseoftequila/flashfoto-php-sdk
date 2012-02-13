@@ -83,8 +83,8 @@ function build_output($var_array, $category) {
 	if(!empty($var_array) && is_array($var_array)) {
 		echo '<h3>'.$category.'</h3>';
 		foreach($var_array as $var => $params) {
-			echo '<label for="'.$var.'">'.$var . (empty($params['default']) ? '' : ' <em>(default: '.$params['default'].')</em>'). ': ';
-			echo '<input type="'. (empty($params['type']) ? 'text' : $params['type']) . '" id="'.$var.'" name="'.$var.'"/>';
+			echo '<label for="'.$var.'">'.$var . (!isset($params['default']) ? '' : ' <em>(default: '.$params['default'].')</em>'). ': ';
+			echo '<input type="'. (!isset($params['type']) ? 'text' : $params['type']) . '" id="'.$var.'" name="'.$var.'"/>';
 			echo '</label>';
 		}
 	}
