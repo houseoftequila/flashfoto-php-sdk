@@ -4,8 +4,8 @@
  * For FlashFoto APIv2
  */
 
-include_once('../config.inc.php');
-include_once('../example.inc.php');
+include_once('config.inc.php');
+include_once('example.inc.php');
 include_once('../flashfoto.php');
 
 $method = 'find faces';
