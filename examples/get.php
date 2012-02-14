@@ -74,7 +74,11 @@ if(!empty($_POST)  && empty($error)) {
 		<div class="error"><?php echo isset($error) ? $error : ''; ?></div>
 		<?php if(isset($result)): ?>
 		<h2>Authenticated Get Result:</h2>
-		<img src="<?php echo 'data:image/'. (isset($mime_type) ? $mime_type : 'jpeg' ).';base64,'.base64_encode($result); ?>" alt="Authenticated Get"/>
+			<?php if(is_object($result)): ?>
+				<pre><?php echo $result; ?></pre>
+			<?php else: ?>
+			<img src="<?php echo 'data:image/'. (isset($mime_type) ? $mime_type : 'jpeg' ).';base64,'.base64_encode($result); ?>" alt="Authenticated Get"/>
+			<?php endif; ?>
 		<?php endif; ?>
 		<?php if(isset($result2)): ?>
 		<h2>Unauthenticated Get Result:</h2>
