@@ -261,10 +261,21 @@ class FlashFoto {
 	 * This method allows for the crop of an image given a specified aspect ratio.
 	 * @param int $image_id
 	 * @param array $params ratioHeight<br/>ratioWidth
-	 * @return array JSON response array
+	 * @return string Binary image data
 	 */
 	function crop($image_id, $params=null) {
 		$url = $this->getUrlWithParamString("crop/".$image_id, $params);
+		return $this->__make_request($url, 'GET', null, false);
+	}
+
+	/**
+	 * This method allows for one image to be inserted into the masked area of another.
+	 * @param int $image_id
+	 * @param array $params mask_id
+	 * @return string Binary image data
+	 */
+	function compose($image_id, $params=null) {
+		$url = $this->getUrlWithParamString("compose/".$image_id, $params);
 		return $this->__make_request($url, 'GET', null, false);
 	}
 
