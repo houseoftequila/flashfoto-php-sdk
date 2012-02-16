@@ -315,7 +315,7 @@ class FlashFotoException extends Exception {
 	/* @var int $http_status */
 	protected $http_status;
 
-	public function __construct($message='', $code=0, $previous=null, $http_status=null) {
+	public function __construct($message='An Internal Error Occurred, please try again', $code=0, $previous=null, $http_status=500) {
 		parent::__construct($message, $code, $previous);
 		$this->http_status = $http_status;
 	}
