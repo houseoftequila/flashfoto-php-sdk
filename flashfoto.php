@@ -69,7 +69,9 @@ class FlashFoto {
 		$this->last_response_info = $info = curl_getinfo($ch);
 		$http_status = isset($info['http_code']) ? $info['http_code'] : null;
 		curl_close($ch);
-
+		if($result === false){
+			throw new FlashFotoException();
+		}
 		//Throw exception if result is bad
 		if($http_status != 200) {
 			$message = '';
