@@ -40,7 +40,11 @@ if(!empty($_POST)  && empty($error)) {
 		$FlashFotoAPI = new FlashFoto($cfg['partner_username'], $cfg['partner_apikey'], $cfg['base_url']);
 		try{
 			$result = $FlashFotoAPI->add($post_data['api_post_data'] ? $post_data['api_post_data'] : null, $post_data['api_params'] ? $post_data['api_params'] : null);
-			$result2 = $FlashFotoAPI->crop($result['Image']['id'], $post_data['api_params'] ? array_intersect_key($post_data['api_params'], array('ratioWidth'=>1, 'ratioHeight'=>1)) : null);
+			try{
+				$result2 = $FlashFotoAPI->crop($result['Image']['id'], $post_data['api_params'] ? array_intersect_key($post_data['api_params'], array('ratioWidth'=>1, 'ratioHeight'=>1)) : null);
+			} catch(Exception $e) {
+				$result2 = $e;
+			}
 		} catch(Exception $e) {
 			$result = $e;
 		}
@@ -71,7 +75,11 @@ if(!empty($_POST)  && empty($error)) {
 		<?php endif; ?>
 		<?php if(isset($result2)): ?>
 		<h2><?php echo ucwords($method); ?> Result:</h2>
-		<img src="<?php echo 'data:image/jpeg;base64,'.base64_encode($result2); ?>" alt="Crop Result"/>
+			<?php if(is_object($result2)): ?>
+				<pre><?php echo $result2; ?></pre>
+			<?php else: ?>
+			<img src="<?php echo 'data:image/jpeg;base64,'.base64_encode($result2); ?>" alt="Crop Result"/>
+			<?php endif; ?>
 		<?php endif; ?>
 
 		<h3>URL</h3>
