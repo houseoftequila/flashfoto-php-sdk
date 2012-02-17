@@ -47,7 +47,7 @@ if(!empty($_POST)  && empty($error)) {
 					}
 				}
 			}
-			$result2 = $cfg['base_url'] . $api_url . '/' . $image_id . (!empty($post_data['api_params']) ? http_build_query($post_data['api_params']) : null);
+			$result2 = $cfg['base_url'] . $api_url . '/' . $image_id . (!empty($post_data['api_params']) ? '?'.http_build_query($post_data['api_params']) : null);
 		} catch(Exception $e) {
 			$result = $e;
 		}
