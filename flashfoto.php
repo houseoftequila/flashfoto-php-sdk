@@ -69,7 +69,9 @@ class FlashFoto {
 		$this->last_response_info = $info = curl_getinfo($ch);
 		$http_status = isset($info['http_code']) ? $info['http_code'] : null;
 		curl_close($ch);
-
+		if($result === false){
+			throw new FlashFotoException();
+		}
 		//Throw exception if result is bad
 		if($http_status != 200) {
 			$message = '';
@@ -313,7 +315,7 @@ class FlashFotoException extends Exception {
 	/* @var int $http_status */
 	protected $http_status;
 
-	public function __construct($message='', $code=0, $previous=null, $http_status=null) {
+	public function __construct($message='An Internal Error Occurred, please try again', $code=0, $previous=null, $http_status=500) {
 		parent::__construct($message, $code, $previous);
 		$this->http_status = $http_status;
 	}
