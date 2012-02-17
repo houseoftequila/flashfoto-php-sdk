@@ -94,11 +94,11 @@ if(!empty($_POST)  && empty($error)) {
 		<pre class="success"><?php print_r($result); ?></pre>
 		<?php endif; ?>
 		<?php if(isset($result2)): ?>
-		<h2>Initial <?php echo ucwords($method); ?> Result:</h2>
+		<h2>Initial <?php echo ucwords($method); ?>_status Result:</h2>
 		<pre class="success"><?php print_r($result2); ?></pre>
 		<?php endif; ?>
 		<?php if(isset($result3)): ?>
-		<h2>Final <?php echo ucwords($method); ?> Result:</h2>
+		<h2>Final <?php echo ucwords($method); ?>_status Result:</h2>
 		<pre class="success"><?php print_r($result3); ?></pre>
 		<?php endif; ?>
 		<?php if(isset($result4)): ?>
