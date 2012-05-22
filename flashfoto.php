@@ -4,6 +4,13 @@
  * For FlashFoto APIv2
  */
 
+if(version_compare(PHP_VERSION, '5.3', '<')) {
+	echo 'This library requires PHP 5.3 or greater.';
+}
+if(!function_exists('json_decode') || !function_exists('json_encode')) {
+	echo 'This library requires json_decode and json_encode.';
+}
+
 class FlashFoto {
 
 	protected $partner_username = null;
