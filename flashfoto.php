@@ -190,9 +190,8 @@ class FlashFoto {
 	 * @param array $params image_id
 	 * @return array JSON response array
 	 */
-	function info($image_id, $params=null) {
-		$url = $this->getUrlWithParamString("info/".$image_id, $params);
-		return $this->__make_request($url);
+	function info($image_id) {
+		return $this->__make_request("info/".$image_id);
 	}
 
 	/**
@@ -239,9 +238,8 @@ class FlashFoto {
 	 * @param array $params
 	 * @return array JSON response array
 	 */
-	function mugshot($image_id, $params=null) {
-		$url = $this->getUrlWithParamString("mugshot/".$image_id, $params);
-		return $this->__make_request($url);
+	function mugshot($image_id) {
+		return $this->__make_request("mugshot/".$image_id);
 	}
 
 	/**
@@ -250,9 +248,8 @@ class FlashFoto {
 	 * @param array $params
 	 * @return array JSON response array
 	 */
-	function mugshot_status($image_id, $params=null) {
-		$url = $this->getUrlWithParamString("mugshot_status/".$image_id, $params);
-		return $this->__make_request($url);
+	function mugshot_status($image_id) {
+		return $this->__make_request("mugshot_status/".$image_id);
 	}
 
 	/**
