@@ -4,7 +4,14 @@
  * For FlashFoto APIv2
  */
 
-class FlashFoto extends Object {
+if(version_compare(PHP_VERSION, '5.3', '<')) {
+	echo 'This library requires PHP 5.3 or greater.';
+}
+if(!function_exists('json_decode') || !function_exists('json_encode')) {
+	echo 'This library requires json_decode and json_encode.';
+}
+
+class FlashFoto {
 
 	protected $partner_username = null;
 	protected $partner_apikey = null;
@@ -69,7 +76,9 @@ class FlashFoto extends Object {
 		$this->last_response_info = $info = curl_getinfo($ch);
 		$http_status = isset($info['http_code']) ? $info['http_code'] : null;
 		curl_close($ch);
-
+		if($result === false){
+			throw new FlashFotoException();
+		}
 		//Throw exception if result is bad
 		if($http_status != 200) {
 			$message = '';
@@ -80,7 +89,7 @@ class FlashFoto extends Object {
 				$message = $result['message'];
 				$code = $result['code'];
 			} else {
-				$message = 'Unable to decode API response';
+				throw new FlashFotoResponseDecodingException('Unable to decode API response', 0, null, $http_status);
 			}
 			//Throw proper exception type
 			switch($http_status) {
@@ -94,7 +103,7 @@ class FlashFoto extends Object {
 		if($decode) {
 			$decoded = json_decode($result, true);
 			if($decoded === null) {
-				throw new FlashFotoException('Unable to decode API response', 0, null, $http_status);
+				throw new FlashFotoResponseDecodingException('Unable to decode API response', 0, null, $http_status);
 			} else {
 				return $decoded;
 			}
@@ -118,7 +127,7 @@ class FlashFoto extends Object {
 
 	/**
 	 * Adds an image
-	 * @param string $image_data String of raw image data
+	 * @param string $image_data String of raw image data, null if using the location param
 	 * @param array $params version<br/>privacy<br/>group<br/>format<br/>location<br/>
 	 * @return array JSON response array
 	 */
@@ -181,9 +190,8 @@ class FlashFoto extends Object {
 	 * @param array $params image_id
 	 * @return array JSON response array
 	 */
-	function info($image_id, $params=null) {
-		$url = $this->getUrlWithParamString("info/".$image_id, $params);
-		return $this->__make_request($url);
+	function info($image_id) {
+		return $this->__make_request("info/".$image_id);
 	}
 
 	/**
@@ -231,9 +239,8 @@ class FlashFoto extends Object {
 	 * @param array $params
 	 * @return array JSON response array
 	 */
-	function mugshot($image_id, $params=null) {
-		$url = $this->getUrlWithParamString("mugshot/".$image_id, $params);
-		return $this->__make_request($url);
+	function mugshot($image_id) {
+		return $this->__make_request("mugshot/".$image_id);
 	}
 
 	/**
@@ -242,9 +249,8 @@ class FlashFoto extends Object {
 	 * @param array $params
 	 * @return array JSON response array
 	 */
-	function mugshot_status($image_id, $params=null) {
-		$url = $this->getUrlWithParamString("mugshot_status/".$image_id, $params);
-		return $this->__make_request($url);
+	function mugshot_status($image_id) {
+		return $this->__make_request("mugshot_status/".$image_id);
 	}
 
 	/**
@@ -262,11 +268,22 @@ class FlashFoto extends Object {
 	 * This method allows for the crop of an image given a specified aspect ratio.
 	 * @param int $image_id
 	 * @param array $params ratioHeight<br/>ratioWidth
-	 * @return array JSON response array
+	 * @return string Binary image data
 	 */
 	function crop($image_id, $params=null) {
 		$url = $this->getUrlWithParamString("crop/".$image_id, $params);
-		return $this->__make_request($url);
+		return $this->__make_request($url, 'GET', null, false);
+	}
+
+	/**
+	 * This method allows for one image to be inserted into the masked area of another.
+	 * @param int $image_id
+	 * @param array $params mask_id
+	 * @return string Binary image data
+	 */
+	function compose($image_id, $params=null) {
+		$url = $this->getUrlWithParamString("compose/".$image_id, $params);
+		return $this->__make_request($url, 'GET', null, false);
 	}
 
 	/**
@@ -276,7 +293,7 @@ class FlashFoto extends Object {
 	 * @return array JSON response array
 	 */
 	function merge($merge_data, $params=null) {
-		$url = $this->getUrlWithParamString("merge");
+		$url = $this->getUrlWithParamString('merge', $params);
 		return $this->__make_request($url, $method='POST', json_encode($merge_data));
 	}
 
@@ -315,7 +332,7 @@ class FlashFotoException extends Exception {
 	/* @var int $http_status */
 	protected $http_status;
 
-	public function __construct($message='', $code=0, $previous=null, $http_status=null) {
+	public function __construct($message='An Internal Error Occurred, please try again', $code=0, $previous=null, $http_status=500) {
 		parent::__construct($message, $code, $previous);
 		$this->http_status = $http_status;
 	}
@@ -324,5 +341,7 @@ class FlashFotoException extends Exception {
 		return $this->http_status;
 	}
 }
+//If JSON decoding fails
+class FlashFotoResponseDecodingException extends FlashFotoException {}
 //404
 class FlashFotoNotFoundException extends FlashFotoException {}
