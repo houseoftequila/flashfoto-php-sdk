@@ -103,7 +103,7 @@ class FlashFoto {
 		if($decode) {
 			$decoded = json_decode($result, true);
 			if($decoded === null) {
-				throw new FlashFotoResponseDecodingException('Unable to decode API response', 0, null, $http_status);
+				throw new FlashFotoResponseDecodingException('Unable to decode API response', 0, null, $http_status, $result);
 			} else {
 				return $decoded;
 			}
@@ -342,6 +342,21 @@ class FlashFotoException extends Exception {
 	}
 }
 //If JSON decoding fails
-class FlashFotoResponseDecodingException extends FlashFotoException {}
+class FlashFotoResponseDecodingException extends FlashFotoException {
+	/* @var string $response */
+	protected $response;
+
+	public function __construct($message='An Internal Error Occurred, please try again', $code=0, $previous=null, $http_status=500, $response='') {
+		parent::__construct($message, $code, $previous, $http_status);
+		$this->response = $response;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getResponse() {
+		return $this->response;
+	}
+}
 //404
 class FlashFotoNotFoundException extends FlashFotoException {}
