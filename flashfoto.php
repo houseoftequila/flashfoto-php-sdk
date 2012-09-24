@@ -359,4 +359,10 @@ class FlashFotoResponseDecodingException extends FlashFotoException {
 	}
 }
 //404
-class FlashFotoNotFoundException extends FlashFotoException {}
+class FlashFotoNotFoundException extends FlashFotoException {
+
+	public function __construct($message='File not found', $code=0, $previous=null, $http_status=404) {
+		parent::__construct($message, $code, $previous, $http_status);
+	}
+
+}
