@@ -84,12 +84,12 @@ class FlashFoto {
 			$message = '';
 			$code = 0;
 			//Get message and code from API response
-			$result = json_decode($result, true);
-			if($result && isset($result['message']) && isset($result['code'])) {
-				$message = $result['message'];
-				$code = $result['code'];
+			$decoded = json_decode($result, true);
+			if($decoded && isset($decoded['message']) && isset($decoded['code'])) {
+				$message = $decoded['message'];
+				$code = $decoded['code'];
 			} else {
-				throw new FlashFotoResponseDecodingException('Unable to decode API response', 0, null, $http_status);
+				throw new FlashFotoResponseDecodingException('Unable to decode API error response', 0, null, $http_status, $result);
 			}
 			//Throw proper exception type
 			switch($http_status) {
